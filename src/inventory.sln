@@ -9,13 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.WebAPI", "Invento
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.ServerLogic", "Inventory.ServerLogic\Inventory.ServerLogic.csproj", "{89D34497-0257-4230-8811-19FCA6E2010B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2A0397D2-494F-4613-B539-47402B1DA8E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B4D7C93A-BA89-4119-8DDE-D585263DDBEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,12 @@ Global
 		{89D34497-0257-4230-8811-19FCA6E2010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89D34497-0257-4230-8811-19FCA6E2010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89D34497-0257-4230-8811-19FCA6E2010B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE436D4E-DEB9-4C9A-A777-0837E50B63F0} = {2A0397D2-494F-4613-B539-47402B1DA8E3}
+		{89D34497-0257-4230-8811-19FCA6E2010B} = {2A0397D2-494F-4613-B539-47402B1DA8E3}
 	EndGlobalSection
 EndGlobal
