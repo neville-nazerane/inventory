@@ -11,7 +11,6 @@ namespace Inventory.Models
     public class User : IdentityUser<int>
     {
 
-        [Required]
         public bool IsPermanent { get; set; }
 
 
