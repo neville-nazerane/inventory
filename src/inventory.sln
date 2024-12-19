@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Models", "Invento
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.WebAPI", "Inventory.WebAPI\Inventory.WebAPI.csproj", "{FE436D4E-DEB9-4C9A-A777-0837E50B63F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.ServerLogic", "Inventory.ServerLogic\Inventory.ServerLogic.csproj", "{89D34497-0257-4230-8811-19FCA6E2010B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{FE436D4E-DEB9-4C9A-A777-0837E50B63F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE436D4E-DEB9-4C9A-A777-0837E50B63F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE436D4E-DEB9-4C9A-A777-0837E50B63F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89D34497-0257-4230-8811-19FCA6E2010B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89D34497-0257-4230-8811-19FCA6E2010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89D34497-0257-4230-8811-19FCA6E2010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89D34497-0257-4230-8811-19FCA6E2010B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

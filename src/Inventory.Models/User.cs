@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Inventory.Models
 {
-    public class User : IdentityUser<int>
+    public class User : IdentityUser
     {
 
         public bool IsPermanent { get; set; }
