@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Inventory.Models
+namespace Inventory.Models.Entities
 {
     public class Item
     {
