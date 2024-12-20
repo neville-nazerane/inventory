@@ -12,9 +12,8 @@ namespace Inventory.WebAPI
 
         }
 
-
         static Task SignupAsync(UserService service,
-                        SignupModel model)
+                                SignupModel model)
             => service.SignupAsync(model);
 
     }
