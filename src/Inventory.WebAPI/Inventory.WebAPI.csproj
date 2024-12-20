@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Inventory.Models\Inventory.Models.csproj" />
+    <ProjectReference Include="..\Inventory.ServerLogic\Inventory.ServerLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
