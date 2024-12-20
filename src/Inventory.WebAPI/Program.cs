@@ -1,5 +1,6 @@
 
 using Inventory.ServerLogic.Utils;
+using Inventory.WebAPI;
 using Inventory.WebAPI.Endpoints;
 using Inventory.WebAPI.Utils;
 
@@ -16,5 +17,7 @@ app.MapGet("/", () => "Hello Inventory World!");
 app.HandleExceptions();
 
 app.MapUserEndpoints();
+
+app.MapAllEndpoints();
 
 await app.RunAsync();
