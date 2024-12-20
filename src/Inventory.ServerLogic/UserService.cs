@@ -1,5 +1,6 @@
 ﻿using Inventory.Models;
 using Inventory.Models.Entities;
+using Inventory.Models.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Inventory.ServerLogic
             if (!res.Succeeded)
             {
                 var errors = res.Errors.Select(e => e.Description).ToImmutableArray();
+                throw new MultiErrorsException(errors);
             }
         }
 

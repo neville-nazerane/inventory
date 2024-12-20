@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.ServerLogic", "In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2A0397D2-494F-4613-B539-47402B1DA8E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.ClientLogic", "Inventory.ClientLogic\Inventory.ClientLogic.csproj", "{0525F7B6-1C4E-467A-8E1D-08FA03E00256}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{6B24F489-E4A8-4AD6-8100-600ED4577848}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{8A0FCEA4-1618-4B41-9694-C91E2C00E3FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +35,18 @@ Global
 		{89D34497-0257-4230-8811-19FCA6E2010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89D34497-0257-4230-8811-19FCA6E2010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89D34497-0257-4230-8811-19FCA6E2010B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0525F7B6-1C4E-467A-8E1D-08FA03E00256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0525F7B6-1C4E-467A-8E1D-08FA03E00256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0525F7B6-1C4E-467A-8E1D-08FA03E00256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0525F7B6-1C4E-467A-8E1D-08FA03E00256}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{B4D7C93A-BA89-4119-8DDE-D585263DDBEC} = {8A0FCEA4-1618-4B41-9694-C91E2C00E3FE}
 		{FE436D4E-DEB9-4C9A-A777-0837E50B63F0} = {2A0397D2-494F-4613-B539-47402B1DA8E3}
 		{89D34497-0257-4230-8811-19FCA6E2010B} = {2A0397D2-494F-4613-B539-47402B1DA8E3}
+		{0525F7B6-1C4E-467A-8E1D-08FA03E00256} = {6B24F489-E4A8-4AD6-8100-600ED4577848}
 	EndGlobalSection
 EndGlobal
