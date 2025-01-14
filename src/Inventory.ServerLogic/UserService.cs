@@ -31,10 +31,10 @@ namespace Inventory.ServerLogic
             }
         }
 
-        public async Task<string> GetJwtAsync(LoginModel login)
-        {
-            _manager.UserManager.GenerateUserTokenAsync
-        }
+        //public async Task<string> GetJwtAsync(LoginModel login)
+        //{
+        //    //_manager.UserManager.GenerateUserTokenAsync()
+        //}
 
     }
 }
