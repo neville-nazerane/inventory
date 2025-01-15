@@ -3,25 +3,29 @@
 <div class="container d-flex align-items-center justify-content-center vh-100">
     <div class="card p-4 shadow-lg" style="width: 350px;">
         <h3 class="text-center mb-4">Sign Up</h3>
-        <form>
+        <EditForm Model=model OnValidSubmit=SignupAsync>
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                <InputText @bind-Value=model.UserName class="form-control" id="username" placeholder="Enter your username" />
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                <InputText @bind-Value=model.Email type="email" class="form-control" id="email" placeholder="Enter your email" />
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                <InputText @bind-Value=model.Password type="password" class="form-control" id="password" placeholder="Enter your password" />
             </div>
             <div class="mb-3">
                 <label for="confirm-password" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirm-password" placeholder="Confirm your password">
+                <InputText @bind-Value=model.ConfirmPassword type="password" class="form-control" id="confirm-password" placeholder="Confirm your password" />
             </div>
             <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-        </form>
+        </EditForm>
         <div class="text-center mt-3">
             <a href="login" class="text-decoration-none">Already have an account? Login</a>
         </div>
