@@ -35,7 +35,7 @@ namespace Inventory.WebAPI.Utils
                                 await response.WriteAsJsonAsync(multiException.Messages);
                                 break;
                         }
-
+                    }
                 });
             });
 

@@ -1,7 +1,5 @@
-
 using Inventory.ServerLogic.Utils;
 using Inventory.WebAPI;
-using Inventory.WebAPI.Endpoints;
 using Inventory.WebAPI.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +13,6 @@ var app = builder.Build();
 app.MapGet("/", () => "Hello Inventory World!");
 
 app.HandleExceptions();
-
-app.MapUserEndpoints();
 
 app.MapAllEndpoints();
 

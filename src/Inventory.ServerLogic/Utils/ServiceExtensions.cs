@@ -12,8 +12,6 @@ namespace Inventory.ServerLogic.Utils
 
         public static IServiceCollection AddAllServices(this IServiceCollection services)
         {
-            services.AddScoped<UserService>();
-
             return services;
         }
 

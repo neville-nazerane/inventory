@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Inventory.ServerLogic
 {
 
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
 
         public DbSet<Location> Locations { get; set; }
