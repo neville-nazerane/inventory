@@ -7,6 +7,8 @@
 
     <Authorized>
         <h2>Welcome User</h2>
+
+        <a href="#" @onclick:preventDefault @onclick=@_authManager.SignOutAsync>Sign out</a>
     </Authorized>
     <NotAuthorized>
         <a href="login">Login NOW!</a>

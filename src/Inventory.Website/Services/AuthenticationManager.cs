@@ -1,36 +1,42 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Inventory.Website.Utils;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Inventory.Website.Services
 {
-    public class AuthenticationManager : AuthenticationStateProvider
+    public class AuthenticationManager(IJSRuntime js) : AuthenticationStateProvider
     {
-        private string? _jwtToken;
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        private const string JWT_KEY = "JWT_TOKEN";
+
+        private readonly IJSRuntime _js = js;
+
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            if (string.IsNullOrEmpty(_jwtToken))
+            var jwt = await _js.GetFromLocalStorageAsync(JWT_KEY);
+            if (string.IsNullOrEmpty(jwt))
             {
-                return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
+                return new(new(new ClaimsIdentity()));
             }
 
             var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(_jwtToken);
+            var token = handler.ReadJwtToken(jwt);
             var identity = new ClaimsIdentity(token.Claims, "Bearer");
 
-            return Task.FromResult(new AuthenticationState(new(identity)));
+            return new(new(identity));
         }
 
-        public void Signin(string jwtToken)
+        public async void SignInAsync(string jwtToken)
         {
-            _jwtToken = jwtToken;
+            await _js.SaveToLocalStorageAsync(JWT_KEY, jwtToken);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public void Signout()
+        public async void SignOutAsync()
         {
-            _jwtToken = null;
+            await _js.DeleteFromLocalStorageAsync(JWT_KEY);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
     }

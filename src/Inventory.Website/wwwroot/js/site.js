@@ -29,7 +29,22 @@ function showError(errorMsg)
 }
 
 
+function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getFromLocalStorage(key) {
+    return localStorage.getItem(key);
+}
+
+function deleteFromLocalStorage(key) {
+    localStorage.removeItem(key);
+}
+
 
 window.openModal = openModal;
 window.closeModal = closeModal;
-window.closeModal = showError;
+window.showError = showError;
+window.saveToLocalStorage = saveToLocalStorage;
+window.getFromLocalStorage = getFromLocalStorage;
+window.deleteFromLocalStorage = deleteFromLocalStorage;
