@@ -1,7 +1,16 @@
 ﻿@page "/"
-
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+
+<AuthorizeView>
+
+    <Authorized>
+        <h2>Welcome User</h2>
+    </Authorized>
+    <NotAuthorized>
+        <a href="login">Login NOW!</a>
+    </NotAuthorized>
+
+
+</AuthorizeView>
