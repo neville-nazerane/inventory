@@ -13,12 +13,5 @@ namespace Inventory.ClientLogic
         private readonly HttpClient _httpClient = httpClient;
 
         
-        public async Task SignupAsync(SignupModel model)
-        {
-            using var res = await _httpClient.PostAsJsonAsync("signup", model);
-            res.EnsureSuccessStatusCode();
-        }
-
-
     }
 }
