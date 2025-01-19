@@ -22,7 +22,5 @@ namespace Inventory.Models.Entities
         [Required]
         public int? UserId { get; set; }
 
-        public User? User { get; set; }
-
     }
 }

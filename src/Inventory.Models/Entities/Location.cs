@@ -18,8 +18,6 @@ namespace Inventory.Models.Entities
         [Required]
         public int? OwnerId { get; set; }
 
-        public User? Owner { get; set; }
-
         public IEnumerable<Item>? Items { get; set; }
 
     }
