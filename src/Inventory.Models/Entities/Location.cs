@@ -18,11 +18,21 @@ namespace Inventory.Models.Entities
         [Required]
         public int? OwnerId { get; set; }
 
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        [Required]
+        public DateTime LastUpdatedOn { get; set; }
+
         public IEnumerable<Item> Items { get; set; } = [];
 
         public IEnumerable<LocationPermission> LocationPermissions { get; set; } = [];
 
         public IEnumerable<LocationState> LocationStates { get; set; } = [];
 
+        public Location()
+        {
+            CreatedOn = DateTime.UtcNow;
+        }
     }
 }

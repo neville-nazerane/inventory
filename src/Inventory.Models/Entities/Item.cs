@@ -24,7 +24,19 @@ namespace Inventory.Models.Entities
         [Required]
         public int LocationId { get; set; }
 
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        [Required]
+        public DateTime LastUpdatedOn { get; set; }
+
+
         public Location? Location { get; set; }
+
+        public Item()
+        {
+            CreatedOn = DateTime.UtcNow;
+        }
 
     }
 }

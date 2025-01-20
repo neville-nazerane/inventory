@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Inventory.ServerLogic
@@ -82,6 +83,52 @@ namespace Inventory.ServerLogic
 
             await _dbContext.Items.AddAsync(item, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task SetLocationAsExpanded(int locationId,
+                                                int userId,
+                                                bool isExpanded,
+                                                CancellationToken cancellationToken = default)
+        {
+            await ThrowIfCantAccessLocationAsync(locationId, userId, cancellationToken);
+
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+            var updateCount = await _dbContext.LocationStates
+                                                .Where(s => s.LocationId == locationId && s.UserId == userId)
+                                                .ExecuteUpdateAsync(s => s.SetProperty(l => l.IsExpanded, isExpanded), cancellationToken: cancellationToken);
+
+            if (updateCount == 0)
+            {
+                await _dbContext.LocationStates.AddAsync(new()
+                {
+                    LocationId = locationId,
+                    IsExpanded = isExpanded,
+                    Id = locationId
+                }, cancellationToken);
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        private async Task ThrowIfCantAccessLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
+        {
+            var canAccessLocation = await _dbContext.LocationPermissions
+                                                    .AnyAsync(p => p.LocationId == locationId && p.UserId == userId,
+                                                              cancellationToken: cancellationToken);
+
+            if (!canAccessLocation)
+                throw new SingleErrorException("Can't access this location");
+        }
+
+        public async Task ThrowIfCantWriteToLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
+        {
+            var canAccessLocation = await _dbContext.LocationPermissions
+                                                    .AnyAsync(p => p.LocationId == locationId && p.UserId == userId && p.CanWrite,
+                                                              cancellationToken: cancellationToken);
+
+            if (!canAccessLocation)
+                throw new SingleErrorException("Can't make changes in this location");
         }
 
     }
