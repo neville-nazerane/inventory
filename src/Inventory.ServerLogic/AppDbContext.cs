@@ -18,6 +18,7 @@ namespace Inventory.ServerLogic
 
         public DbSet<Item> Items { get; set; }
 
+        public DbSet<LocationState> LocationStates { get; set; }
 
     }
 }
