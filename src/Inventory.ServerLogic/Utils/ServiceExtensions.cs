@@ -17,6 +17,8 @@ namespace Inventory.ServerLogic.Utils
         {
             services.AddDbContext<AppDbContext>(o => o.UseSqlServer(configs["sqlConnection"]));
 
+            services.AddTransient<InventoryService>();
+
             return services;
         }
 

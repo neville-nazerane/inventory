@@ -18,7 +18,11 @@ namespace Inventory.Models.Entities
         [Required]
         public int? OwnerId { get; set; }
 
-        public IEnumerable<Item>? Items { get; set; }
+        public IEnumerable<Item> Items { get; set; } = [];
+
+        public IEnumerable<LocationPermission> LocationPermissions { get; set; } = [];
+
+        public IEnumerable<LocationState> LocationStates { get; set; } = [];
 
     }
 }

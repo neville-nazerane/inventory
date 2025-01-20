@@ -21,5 +21,8 @@ namespace Inventory.Models.Entities
         [Required]
         public int? UserId { get; set; }
 
+        [Required]
+        public bool IsExpanded { get; set; }
+
     }
 }
