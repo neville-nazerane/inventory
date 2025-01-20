@@ -21,7 +21,6 @@ namespace Inventory.Models.Entities
         [Required]
         public DateTime CreatedOn { get; set; }
 
-        [Required]
         public DateTime LastUpdatedOn { get; set; }
 
         public IEnumerable<Item> Items { get; set; } = [];
