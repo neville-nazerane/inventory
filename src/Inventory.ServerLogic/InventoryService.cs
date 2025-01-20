@@ -2,6 +2,7 @@
 using Inventory.Models.Entities;
 using Inventory.Models.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Abstractions;
 using Microsoft.IdentityModel.Logging;
 using System;
 using System.Collections.Generic;
@@ -63,13 +64,12 @@ namespace Inventory.ServerLogic
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task AddItemAsync(string name,
+        public async Task AddItemAsync(AddLocationModel model,
                                        int userId,
-                                       int locationId,
                                        CancellationToken cancellationToken = default)
         {
             var isLocationValid = await _dbContext.LocationPermissions
-                                                    .AnyAsync(p => p.LocationId == locationId && p.UserId == userId && p.CanWrite, 
+                                                    .AnyAsync(p => p.LocationId == model.LocationId && p.UserId == userId && p.CanWrite, 
                                                               cancellationToken: cancellationToken);
 
             if (!isLocationValid)
@@ -77,8 +77,8 @@ namespace Inventory.ServerLogic
 
             var item = new Item
             {
-                Name = name,
-                LocationId = locationId
+                Name = model.Name,
+                LocationId = model.LocationId,
             };
 
             await _dbContext.Items.AddAsync(item, cancellationToken);
@@ -86,8 +86,8 @@ namespace Inventory.ServerLogic
         }
 
         public async Task SetLocationAsExpanded(int locationId,
+                                                bool isExpanded,       
                                                 int userId,
-                                                bool isExpanded,
                                                 CancellationToken cancellationToken = default)
         {
             await ThrowIfCantAccessLocationAsync(locationId, userId, cancellationToken);
