@@ -1,6 +1,7 @@
 ﻿using Inventory.Models;
 using Inventory.ServerLogic;
 using Inventory.WebAPI.Services;
+using System.Runtime.CompilerServices;
 
 namespace Inventory.WebAPI
 {
@@ -13,6 +14,8 @@ namespace Inventory.WebAPI
             endpoints.MapPost("location", AddLocationAsync);
             endpoints.MapPost("item", AddItemAsync);
             endpoints.MapPut("location/{locationId}/expanded/{isExpanded}", SetLocationAsExpanded);
+            endpoints.MapGet("locations", GetLocationsForUserAsync);
+            endpoints.MapGet("location/{locationId}/items", GetItemForUsersAsync);
         }
 
         static Task AddLocationAsync(string name,
@@ -34,5 +37,17 @@ namespace Inventory.WebAPI
                                           CancellationToken cancellationToken = default)
             => service.SetLocationAsExpanded(locationId, isExpanded, user.UserId, cancellationToken);
 
+        static ConfiguredCancelableAsyncEnumerable<LocationForUser> GetLocationsForUserAsync(
+                                                                                    UserInfo user,
+                                                                                    InventoryService service,
+                                                                                    CancellationToken cancellationToken = default)
+            => service.GetLocationsForUserAsync(user.UserId, cancellationToken);
+
+        static ConfiguredCancelableAsyncEnumerable<ItemForUser> GetItemForUsersAsync(
+                                                                            int locationId,
+                                                                            UserInfo user,
+                                                                            InventoryService service,
+                                                                            CancellationToken cancellationToken = default)
+            => service.GetItemForUsersAsync(user.UserId, locationId, cancellationToken);
     }
 }

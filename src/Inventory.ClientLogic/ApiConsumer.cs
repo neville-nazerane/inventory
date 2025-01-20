@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,13 @@ namespace Inventory.ClientLogic
             using var res = await _httpClient.PutAsync($"location/{locationId}/expanded/{isExpanded}", null, cancellationToken);
             res.EnsureSuccessStatusCode();
         }
+
+        public IAsyncEnumerable<LocationForUser?> GetLocationsForUserAsync(
+            CancellationToken cancellationToken = default)
+            => _httpClient.GetFromJsonAsAsyncEnumerable<LocationForUser>("locations", cancellationToken: cancellationToken);
+
+        public IAsyncEnumerable<ItemForUser?> GetItemForUsersAsync(int locationId, CancellationToken cancellationToken = default)
+            => _httpClient.GetFromJsonAsAsyncEnumerable<ItemForUser>($"location/{locationId}/items", cancellationToken: cancellationToken);
 
     }
 }
