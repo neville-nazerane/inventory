@@ -10,10 +10,13 @@ using System.Threading.Tasks;
 
 namespace Inventory.ClientLogic
 {
-    public class ApiHandler : HttpClientHandler
+    public class ApiHandler(IAuthProvider provider) : HttpClientHandler
     {
 
         private const string TYPE_HEADER = "exception-type";
+
+
+        private readonly IAuthProvider _provider = provider;
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

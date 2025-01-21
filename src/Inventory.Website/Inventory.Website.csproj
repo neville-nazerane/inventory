@@ -14,4 +14,8 @@
     <PackageReference Include="Neville.Auth.ApiConsumer" Version="1.0.3203" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Inventory.ClientLogic\Inventory.ClientLogic.csproj" />
+  </ItemGroup>
+
 </Project>

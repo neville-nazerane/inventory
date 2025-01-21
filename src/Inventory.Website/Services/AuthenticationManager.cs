@@ -1,4 +1,5 @@
-﻿using Inventory.Website.Utils;
+﻿using Inventory.ClientLogic;
+using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,7 +7,7 @@ using System.Security.Claims;
 
 namespace Inventory.Website.Services
 {
-    public class AuthenticationManager(IJSRuntime js) : AuthenticationStateProvider
+    public class AuthenticationManager(IJSRuntime js) : AuthenticationStateProvider, IAuthProvider
     {
 
         private const string JWT_KEY = "JWT_TOKEN";
@@ -15,7 +16,7 @@ namespace Inventory.Website.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var jwt = await _js.GetFromLocalStorageAsync(JWT_KEY);
+            var jwt = await GetJwtAsync();
             if (string.IsNullOrEmpty(jwt))
             {
                 return new(new(new ClaimsIdentity()));
@@ -27,6 +28,8 @@ namespace Inventory.Website.Services
 
             return new(new(identity));
         }
+
+        public ValueTask<string> GetJwtAsync() => _js.GetFromLocalStorageAsync(JWT_KEY);
 
         public async void SignInAsync(string jwtToken)
         {
