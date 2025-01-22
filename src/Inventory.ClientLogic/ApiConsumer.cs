@@ -14,10 +14,11 @@ namespace Inventory.ClientLogic
         
         private readonly HttpClient _httpClient = httpClient;
 
-        public async Task AddLocationAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<int> AddLocationAsync(string name, CancellationToken cancellationToken = default)
         {
             using var res = await _httpClient.PostAsync($"location?name={name}", null, cancellationToken);
             res.EnsureSuccessStatusCode();
+            return int.Parse(await res.Content.ReadAsStringAsync());
         }
         
         public async Task AddItemAsync(AddLocationModel model,

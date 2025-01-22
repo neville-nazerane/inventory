@@ -18,7 +18,7 @@ namespace Inventory.WebAPI
             endpoints.MapGet("location/{locationId}/items", GetItemForUsersAsync);
         }
 
-        static Task AddLocationAsync(string name,
+        static Task<int> AddLocationAsync(string name,
                                      UserInfo user,
                                      InventoryService service,
                                      CancellationToken cancellationToken = default)

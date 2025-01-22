@@ -18,8 +18,12 @@ builder.Services.AddScoped(sp => new AuthClient(new(new AuthApiHandler())
 }));
 //BaseAddress = new("https://auth.nevillenazerane.com")
 
+// adding api consumer
 builder.Services.AddTransient<ApiHandler>()
-                .AddScoped(sp => new ApiConsumer(new(sp.GetRequiredService<ApiHandler>())));
+                .AddScoped(sp => new ApiConsumer(new(sp.GetRequiredService<ApiHandler>())
+                {
+                    BaseAddress = new("http://localhost:5059")
+                }));
 
 builder.Services.AddSingleton<AuthenticationManager>()
                 .AddSingleton<AuthenticationStateProvider>(sp => sp.GetRequiredService<AuthenticationManager>())

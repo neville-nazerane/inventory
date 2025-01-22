@@ -45,7 +45,7 @@ namespace Inventory.ServerLogic
                          })
                         .AsAsyncEnumerable().WithCancellation(cancellationToken);
 
-        public async Task AddLocationAsync(string name, int ownerId, CancellationToken cancellationToken = default)
+        public async Task<int> AddLocationAsync(string name, int ownerId, CancellationToken cancellationToken = default)
         {
             var location = new Location
             {
@@ -62,6 +62,8 @@ namespace Inventory.ServerLogic
 
             await _dbContext.Locations.AddAsync(location, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return location.Id;
         }
 
         public async Task AddItemAsync(AddLocationModel model,
