@@ -20,6 +20,10 @@ namespace Inventory.ClientLogic
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            var jwt = await _provider.GetJwtAsync();
+            if (jwt is not null)
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+
             var res = await base.SendAsync(request, cancellationToken);
             if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {

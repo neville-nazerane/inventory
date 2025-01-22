@@ -7,87 +7,40 @@
     <!-- Input with Add Button in the Left Column -->
     <div class="row mb-3">
         <div class="col-md-4">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Add new item">
-                <button class="btn btn-primary">Add</button>
-            </div>
+            @if(addLoading)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            }
+            else{
+                <form class="input-group" @onsubmit=AddLocationAsync>
+                    <input @bind-value=newLocationName class="form-control" placeholder="Add new item">
+                    <button class="btn btn-primary">Add</button>
+                </form>
+            }
         </div>
     </div>
 
     <div class="row">
-        <!-- First Row -->
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header bg-light d-flex align-items-center">
-                    <span>Card Title 1</span>
-                    <div class="ms-auto">
-                        <button class="btn btn-sm btn-secondary me-2">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    This is the body of card 1.
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header bg-light d-flex align-items-center">
-                    <span>Card Title 2</span>
-                    <div class="ms-auto">
-                        <button class="btn btn-sm btn-secondary me-2">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    This is the body of card 2.
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header bg-light d-flex align-items-center">
-                    <span>Card Title 3</span>
-                    <div class="ms-auto">
-                        <button class="btn btn-sm btn-secondary me-2">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    This is the body of card 3.
-                </div>
-            </div>
-        </div>
 
-        <!-- Second Row -->
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header bg-light d-flex align-items-center">
-                    <span>Card Title 4</span>
-                    <div class="ms-auto">
-                        <button class="btn btn-sm btn-secondary me-2">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
+        @foreach (var loc in locations)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header bg-light d-flex align-items-center">
+                        <span>@loc.Name</span>
+                        <div class="ms-auto">
+                            <button class="btn btn-sm btn-secondary me-2">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
                     </div>
                 </div>
-                <div class="card-body">
-                    This is the body of card 4.
-                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header bg-light d-flex align-items-center">
-                    <span>Card Title 5</span>
-                    <div class="ms-auto">
-                        <button class="btn btn-sm btn-secondary me-2">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    This is the body of card 5.
-                </div>
-            </div>
-        </div>
+        }
     </div>
 
 

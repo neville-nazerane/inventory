@@ -1,6 +1,7 @@
 ﻿using Inventory.Models;
 using Inventory.Models.Entities;
 using Inventory.Models.Exceptions;
+using Inventory.ServerLogic.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Abstractions;
 using Microsoft.IdentityModel.Logging;
@@ -18,21 +19,21 @@ namespace Inventory.ServerLogic
     {
         private readonly AppDbContext _dbContext = dbContext;
 
-        public ConfiguredCancelableAsyncEnumerable<LocationForUser> GetLocationsForUserAsync(int userId, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<LocationForUser> GetLocationsForUserAsync(int userId, CancellationToken cancellationToken = default)
             => _dbContext.Locations
                          .Where(l => l.LocationPermissions.Any(u => u.UserId == userId))
                          .Select(l => new
                          {
                              Location = l,
-                             State = l.LocationStates.Single(s => s.UserId == userId),
+                             State = l.LocationStates.SingleOrDefault(s => s.UserId == userId),
                          })
                          .Select(l => new LocationForUser()
                          {
                              LocationId = l.Location.Id,
                              Name = l.Location.Name,
-                             IsExpanded = l.State.IsExpanded
+                             IsExpanded = l.State != null && l.State.IsExpanded
                          })
-                         .AsAsyncEnumerable().WithCancellation(cancellationToken);
+                         .AsAsyncEnumerable(cancellationToken);
 
         public ConfiguredCancelableAsyncEnumerable<ItemForUser> GetItemForUsersAsync(int userId, int locationId, CancellationToken cancellationToken = default)
             => _dbContext.Items

@@ -8,7 +8,8 @@ namespace Inventory.WebAPI.Middlewares
 
         public Task InvokeAsync(HttpContext context, UserInfo user)
         {
-            user.Populate(context);
+            if (context.User.Identity?.IsAuthenticated == true)
+                user.Populate(context);
             return _next(context);
         }
 

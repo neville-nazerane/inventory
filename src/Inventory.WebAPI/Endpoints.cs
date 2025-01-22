@@ -10,12 +10,14 @@ namespace Inventory.WebAPI
 
         public static void MapAllEndpoints(this IEndpointRouteBuilder endpoints)
         {
+            var standard = endpoints.MapGroup("")
+                                    .RequireAuthorization();
 
-            endpoints.MapPost("location", AddLocationAsync);
-            endpoints.MapPost("item", AddItemAsync);
-            endpoints.MapPut("location/{locationId}/expanded/{isExpanded}", SetLocationAsExpanded);
-            endpoints.MapGet("locations", GetLocationsForUserAsync);
-            endpoints.MapGet("location/{locationId}/items", GetItemForUsersAsync);
+            standard.MapPost("location", AddLocationAsync);
+            standard.MapPost("item", AddItemAsync);
+            standard.MapPut("location/{locationId}/expanded/{isExpanded}", SetLocationAsExpanded);
+            standard.MapGet("locations", GetLocationsForUserAsync);
+            standard.MapGet("location/{locationId}/items", GetItemForUsersAsync);
         }
 
         static Task<int> AddLocationAsync(string name,
@@ -37,10 +39,9 @@ namespace Inventory.WebAPI
                                           CancellationToken cancellationToken = default)
             => service.SetLocationAsExpanded(locationId, isExpanded, user.UserId, cancellationToken);
 
-        static ConfiguredCancelableAsyncEnumerable<LocationForUser> GetLocationsForUserAsync(
-                                                                                    UserInfo user,
-                                                                                    InventoryService service,
-                                                                                    CancellationToken cancellationToken = default)
+        static IAsyncEnumerable<LocationForUser> GetLocationsForUserAsync(UserInfo user,
+                                                                          InventoryService service,
+                                                                          CancellationToken cancellationToken = default)
             => service.GetLocationsForUserAsync(user.UserId, cancellationToken);
 
         static ConfiguredCancelableAsyncEnumerable<ItemForUser> GetItemForUsersAsync(

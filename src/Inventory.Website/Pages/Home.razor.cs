@@ -11,27 +11,38 @@ namespace Inventory.Website.Pages
         private readonly AuthenticationManager _authManager = authManager;
         private readonly ApiConsumer _apiConsumer = apiConsumer;
 
+        bool addLoading;
+
         ICollection<LocationForUser> locations = [];
         string? newLocationName;
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    var res = _apiConsumer.GetLocationsForUserAsync();
-        //    await foreach (var location in res)
-        //        if (location is not null)
-        //            locations.Add(location);
-        //}
+        protected override async Task OnInitializedAsync()
+        {
+            var res = _apiConsumer.GetLocationsForUserAsync();
+            await foreach (var location in res)
+                if (location is not null)
+                    locations.Add(location);
+        }
 
-        public async Task AddLocation()
+        public async Task AddLocationAsync()
         {
             if (!string.IsNullOrWhiteSpace(newLocationName))
             {
-                var id = await _apiConsumer.AddLocationAsync(newLocationName);
-                locations.Add(new()
+                try
                 {
-                    LocationId = id,
-                    Name = newLocationName,
-                });
+                    addLoading = true;
+                    var id = await _apiConsumer.AddLocationAsync(newLocationName);
+                    locations.Add(new()
+                    {
+                        LocationId = id,
+                        Name = newLocationName,
+                    });
+                    newLocationName = string.Empty;
+                }
+                finally
+                {
+                    addLoading = false;
+                }
             }
         }
 
