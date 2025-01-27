@@ -31,13 +31,13 @@ namespace Inventory.Website.Services
 
         public ValueTask<string> GetJwtAsync() => _js.GetFromLocalStorageAsync(JWT_KEY);
 
-        public async void SignInAsync(string jwtToken)
+        public async Task SignInAsync(string jwtToken)
         {
             await _js.SaveToLocalStorageAsync(JWT_KEY, jwtToken);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public async void SignOutAsync()
+        public async Task SignOutAsync()
         {
             await _js.DeleteFromLocalStorageAsync(JWT_KEY);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

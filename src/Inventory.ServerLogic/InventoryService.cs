@@ -35,7 +35,7 @@ namespace Inventory.ServerLogic
                          })
                          .AsAsyncEnumerable(cancellationToken);
 
-        public ConfiguredCancelableAsyncEnumerable<ItemForUser> GetItemForUsersAsync(int userId, int locationId, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<ItemForUser> GetItemForUsersAsync(int userId, int locationId, CancellationToken cancellationToken = default)
             => _dbContext.Items
                          .Where(i => i.Location != null && i.Location.Id == locationId && i.Location.LocationPermissions.Any(p => p.UserId == userId))
                          .Select(i => new ItemForUser
@@ -44,7 +44,7 @@ namespace Inventory.ServerLogic
                              Name = i.Name,
                              Quantity = i.Quantity,
                          })
-                        .AsAsyncEnumerable().WithCancellation(cancellationToken);
+                        .AsAsyncEnumerable(cancellationToken);
 
         public async Task<int> AddLocationAsync(string name, int ownerId, CancellationToken cancellationToken = default)
         {
@@ -67,7 +67,7 @@ namespace Inventory.ServerLogic
             return location.Id;
         }
 
-        public async Task AddItemAsync(AddLocationModel model,
+        public async Task<int> AddItemAsync(AddLocationModel model,
                                        int userId,
                                        CancellationToken cancellationToken = default)
         {
@@ -86,6 +86,8 @@ namespace Inventory.ServerLogic
 
             await _dbContext.Items.AddAsync(item, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return item.Id;
         }
 
         public async Task SetLocationAsExpanded(int locationId,

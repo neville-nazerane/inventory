@@ -24,7 +24,7 @@ namespace Inventory.Website.Pages
                     locations.Add(location);
         }
 
-        public async Task AddLocationAsync()
+        async Task AddLocationAsync()
         {
             if (!string.IsNullOrWhiteSpace(newLocationName))
             {

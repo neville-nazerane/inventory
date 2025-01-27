@@ -1,4 +1,5 @@
-﻿using Inventory.Models;
+﻿using Inventory.ClientLogic.Utils;
+using Inventory.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,15 @@ namespace Inventory.ClientLogic
         {
             using var res = await _httpClient.PostAsync($"location?name={name}", null, cancellationToken);
             res.EnsureSuccessStatusCode();
-            return int.Parse(await res.Content.ReadAsStringAsync());
+            return await res.ParseIntAsync(cancellationToken: cancellationToken);
         }
         
-        public async Task AddItemAsync(AddLocationModel model,
+        public async Task<int> AddItemAsync(AddLocationModel model,
                                         CancellationToken cancellationToken = default)
         {
             using var res = await _httpClient.PostAsJsonAsync("item", model, cancellationToken);
             res.EnsureSuccessStatusCode();
+            return await res.ParseIntAsync(cancellationToken: cancellationToken);
         }
 
         public async Task SetLocationAsExpanded(int locationId,

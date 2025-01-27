@@ -3,7 +3,7 @@
 <PageTitle>Home</PageTitle>
 
 
-<div class="container mt-4">
+<div class="container-fluid px-4 mt-4">
     <!-- Input with Add Button in the Left Column -->
     <div class="row mb-3">
         <div class="col-md-4">
@@ -24,29 +24,30 @@
 
         @foreach (var loc in locations)
         {
-            <div class="col-md-4">
+            <Location Content=loc />
+@*             <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-header bg-light d-flex align-items-center">
                         <span>@loc.Name</span>
                         <div class="ms-auto">
-                            <button class="btn btn-sm btn-secondary me-2">
-                                <i class="fa-solid fa-pencil"></i>
-                            </button>
-
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </button>
-
                             <button class="btn btn-primary">
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="card-body">
-
+                    <div class="card-body position-relative">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <button class="btn btn-sm btn-secondary me-2">
+                                <i class="fa-solid fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+            </div> *@
         }
     </div>
 

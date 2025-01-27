@@ -26,7 +26,7 @@ namespace Inventory.Website.Pages
             try
             {
                 var jwt = await _authClient.LoginAsync(model);
-                _authManager.SignInAsync(jwt);
+                await _authManager.SignInAsync(jwt);
                 _navigation.NavigateTo("/");
             }
             catch (BadRequestException ex)

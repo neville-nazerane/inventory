@@ -21,15 +21,15 @@ namespace Inventory.WebAPI
         }
 
         static Task<int> AddLocationAsync(string name,
-                                     UserInfo user,
-                                     InventoryService service,
-                                     CancellationToken cancellationToken = default)
+                                          UserInfo user,
+                                          InventoryService service,
+                                          CancellationToken cancellationToken = default)
             => service.AddLocationAsync(name, user.UserId, cancellationToken);
 
-        static Task AddItemAsync(AddLocationModel model,
-                                 UserInfo user,
-                                 InventoryService service,
-                                 CancellationToken cancellationToken = default)
+        static Task<int> AddItemAsync(AddLocationModel model,
+                                      UserInfo user,
+                                      InventoryService service,
+                                      CancellationToken cancellationToken = default)
             => service.AddItemAsync(model, user.UserId, cancellationToken);
 
         static Task SetLocationAsExpanded(int locationId,
@@ -44,7 +44,7 @@ namespace Inventory.WebAPI
                                                                           CancellationToken cancellationToken = default)
             => service.GetLocationsForUserAsync(user.UserId, cancellationToken);
 
-        static ConfiguredCancelableAsyncEnumerable<ItemForUser> GetItemForUsersAsync(
+        static IAsyncEnumerable<ItemForUser> GetItemForUsersAsync(
                                                                             int locationId,
                                                                             UserInfo user,
                                                                             InventoryService service,
