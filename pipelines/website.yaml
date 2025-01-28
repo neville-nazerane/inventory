@@ -1,0 +1,75 @@
+
+pool: hosted-linux
+
+pr: none
+
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - src/Inventory.Models
+      - src/Inventory.ClientLogic
+      - src/Inventory.Website
+      - pipelines/website.yaml
+
+variables:
+  projectPath: src/Inventory.Website
+  projectName: Inventory.Website
+  deploymentDestDirectory: /var/www/inventory
+
+stages:
+  - stage: 
+    displayName: Build
+    jobs:
+
+    - job: Compile
+      steps:
+
+      - script: |
+          dotnet publish $(projectPath) -c release -o published
+          mkdir -p compressed
+          tar -czf compressed/$(projectName).tar.gz -C published .
+        displayName: Publishing Website
+
+      - publish: compressed
+        displayName: Publish for release
+        artifact: published
+
+  - stage: CD
+    displayName: Deploy to the VM
+
+    jobs:
+      - deployment: Deployment
+        displayName: Deploy to Development VM
+        environment:
+          name: Development
+          resourceType: VirtualMachine
+          resourceName: Web Server
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+
+                - checkout: none
+
+                - download: current
+                  displayName: download published artifact
+                  artifact: published
+
+                - script: |
+                    sudo rm -rf $(deploymentDestDirectory)
+                    sudo mkdir -p $(deploymentDestDirectory)
+                    sudo tar -xzf $(projectName).tar.gz -C $(deploymentDestDirectory)
+                  displayName: copying binaries
+                  failOnStderr: true
+                  workingDirectory: $(Pipeline.Workspace)/published
+                  
+                - script: rm -rf *
+                  displayName: Clean up
+                  
+                - task: DeleteFiles@1
+                  displayName: Clean up
+                              
