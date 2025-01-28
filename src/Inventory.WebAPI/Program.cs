@@ -25,7 +25,7 @@ builder.Services.AddAuthentication(o =>
                     var options = configs.GetSection("authOptions");
 
                     var secret = options["secret"];
-                    if (secret is null) throw new ArgumentNullException(nameof(secret), "No secret found in configs");
+                    ArgumentNullException.ThrowIfNull(secret);
 
                     o.TokenValidationParameters = new()
                     {
