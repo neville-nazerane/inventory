@@ -44,11 +44,10 @@ namespace Inventory.WebAPI
                                                                           CancellationToken cancellationToken = default)
             => service.GetLocationsForUserAsync(user.UserId, cancellationToken);
 
-        static IAsyncEnumerable<ItemForUser> GetItemForUsersAsync(
-                                                                            int locationId,
-                                                                            UserInfo user,
-                                                                            InventoryService service,
-                                                                            CancellationToken cancellationToken = default)
+        static IAsyncEnumerable<ItemForUser> GetItemForUsersAsync(int locationId,
+                                                                  UserInfo user,
+                                                                  InventoryService service,
+                                                                  CancellationToken cancellationToken = default)
             => service.GetItemForUsersAsync(user.UserId, locationId, cancellationToken);
     }
 }

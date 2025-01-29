@@ -71,12 +71,7 @@ namespace Inventory.ServerLogic
                                        int userId,
                                        CancellationToken cancellationToken = default)
         {
-            var isLocationValid = await _dbContext.LocationPermissions
-                                                    .AnyAsync(p => p.LocationId == model.LocationId && p.UserId == userId && p.CanWrite, 
-                                                              cancellationToken: cancellationToken);
-
-            if (!isLocationValid)
-                throw new SingleErrorException("Unable to add item into this location");
+            await ThrowIfCantWriteToLocationAsync(model.LocationId, userId, cancellationToken);
 
             var item = new Item
             {
@@ -91,7 +86,7 @@ namespace Inventory.ServerLogic
         }
 
         public async Task SetLocationAsExpanded(int locationId,
-                                                bool isExpanded,       
+                                                bool isExpanded,
                                                 int userId,
                                                 CancellationToken cancellationToken = default)
         {
@@ -116,7 +111,44 @@ namespace Inventory.ServerLogic
             }
         }
 
-        private async Task ThrowIfCantAccessLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
+        public async Task<int> DeleteLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Locations
+                                    .Where(l => l.OwnerId == userId && l.Id == locationId);
+
+            var locationExists = await query.AnyAsync(cancellationToken: cancellationToken);
+
+            if (!locationExists)
+                throw new SingleErrorException("Location doesn't exist or you don't have access to delete it");
+
+            return await query.ExecuteDeleteAsync(cancellationToken: cancellationToken);
+        }
+
+        public async Task<int> DeleteItemAsync(int itemId, int userId, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Items.Where(i => i.Id == itemId);
+
+            var locationId = await query.Select(i => i.LocationId).SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            await ThrowIfCantWriteToLocationAsync(locationId, userId, cancellationToken);
+
+            return await query.ExecuteDeleteAsync(cancellationToken);
+        }
+
+        public async Task UpdateItemQuantityAsync(int itemId,
+                                                  int quantity,
+                                                  int userId,
+                                                  CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Items.Where(i => i.Id == itemId);
+
+            var locationId = await query.Select(i => i.LocationId).SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            await ThrowIfCantWriteToLocationAsync(locationId, userId, cancellationToken);
+
+            await query.ExecuteUpdateAsync(p => p.SetProperty(i => i.Quantity, quantity), 
+                                           cancellationToken: cancellationToken);
+        }
+
+        async Task ThrowIfCantAccessLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
         {
             var canAccessLocation = await _dbContext.LocationPermissions
                                                     .AnyAsync(p => p.LocationId == locationId && p.UserId == userId,
@@ -126,7 +158,7 @@ namespace Inventory.ServerLogic
                 throw new SingleErrorException("Can't access this location");
         }
 
-        public async Task ThrowIfCantWriteToLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
+        async Task ThrowIfCantWriteToLocationAsync(int locationId, int userId, CancellationToken cancellationToken = default)
         {
             var canAccessLocation = await _dbContext.LocationPermissions
                                                     .AnyAsync(p => p.LocationId == locationId && p.UserId == userId && p.CanWrite,
