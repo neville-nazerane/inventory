@@ -68,8 +68,8 @@ namespace Inventory.ServerLogic
         }
 
         public async Task<int> AddItemAsync(AddLocationModel model,
-                                       int userId,
-                                       CancellationToken cancellationToken = default)
+                                            int userId,
+                                            CancellationToken cancellationToken = default)
         {
             await ThrowIfCantWriteToLocationAsync(model.LocationId, userId, cancellationToken);
 
@@ -83,6 +83,61 @@ namespace Inventory.ServerLogic
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return item.Id;
+        }
+
+        public async Task<LocationEditorModel> GetLocationEditorAsync(int locationId, int userId, CancellationToken cancellationToken = default)
+        {
+            await ThrowIfCantAccessLocationAsync(locationId, userId, cancellationToken);
+
+            return await _dbContext.Locations
+                                      .Where(l => l.Id == locationId)
+                                      .Select(l => new LocationEditorModel()
+                                      {
+                                          Id = l.Id,
+                                          Name = l.Name,
+                                      })
+                                      .SingleAsync(cancellationToken: cancellationToken);
+        }
+
+        public async Task<ItemEditorModel> GetItemEditorAsync(int itemId, int userId, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Items.Where(i => i.Id == itemId);
+
+            var locationId = await query.Select(i => i.LocationId).SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            await ThrowIfCantAccessLocationAsync(locationId, userId, cancellationToken);
+
+            return await _dbContext.Items
+                                   .Where(i => i.Id == itemId)
+                                   .Select(i => new ItemEditorModel()
+                                   {
+                                       Id = i.Id,
+                                       Name = i.Name,
+                                       Notes = i.Notes,
+                                   })
+                                   .SingleAsync(cancellationToken: cancellationToken);
+        }
+
+        public async Task UpdateLocationAsync(LocationEditorModel model, int userId, CancellationToken cancellationToken = default)
+        {
+            await ThrowIfCantWriteToLocationAsync(model.Id, userId, cancellationToken);
+
+            await _dbContext.Locations
+                            .Where(l => l.Id == model.Id)
+                            .ExecuteUpdateAsync(s => s.SetProperty(l => l.Name, model.Name), cancellationToken: cancellationToken);
+        }
+
+
+
+        public async Task UpdateItemAsync(ItemEditorModel model, int userId, CancellationToken cancellationToken = default)
+        {
+            var query = _dbContext.Items.Where(i => i.Id == model.Id);
+
+            var locationId = await query.Select(i => i.LocationId).SingleOrDefaultAsync(cancellationToken: cancellationToken);
+            await ThrowIfCantWriteToLocationAsync(locationId, userId, cancellationToken);
+
+            await query.ExecuteUpdateAsync(s => s.SetProperty(i => i.Name, model.Name)
+                                                 .SetProperty(i => i.Notes, model.Notes), 
+                                           cancellationToken: cancellationToken);
         }
 
         public async Task SetLocationAsExpanded(int locationId,
