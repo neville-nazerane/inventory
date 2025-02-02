@@ -47,6 +47,9 @@ stages:
 
     jobs:
       - deployment: Deployment
+        variables:
+          - group: auth
+          - group: inventory
         displayName: Deploy to Development VM
         environment:
           name: Development
@@ -81,7 +84,10 @@ stages:
                     KillSignal=SIGINT
                     SyslogIdentifier=$(service.name)
                     User=root
-                    Environment=sqlConnection=''
+                    Environment=sqlConnection='$(sqlConnection)'
+                    Environment=authOptions__secret='$(auth.secret)'
+                    Environment=authOptions__issuer='$(auth.issuer)'
+                    Environment=cors='$(cors)'
                     EOF
 
                   displayName: Generate Service File

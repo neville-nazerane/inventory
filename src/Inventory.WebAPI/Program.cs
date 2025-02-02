@@ -39,14 +39,23 @@ builder.Services.AddAuthentication(o =>
                     };
                     
                 });
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
-        builder.WithOrigins("http://localhost:5046")
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+    var origins = configs["cors"];
+    if (origins is not null)
+    {
+
+        var urls = origins.Split(",");
+
+        options.AddDefaultPolicy(builder =>
+            builder.WithOrigins(urls)
+                   .AllowAnyMethod()
+                   .AllowAnyHeader());
+    }
+
 });
 
 
