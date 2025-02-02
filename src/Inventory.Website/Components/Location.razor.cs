@@ -52,5 +52,11 @@ namespace Inventory.Website.Components
             newItem = null;
         }
 
+        public Task IncreaseQuantityAsync(ItemForUser item) 
+            => _apiConsumer.UpdateItemQuantityAsync(item.ItemId, ++item.Quantity);
+
+        public Task DecreaseQuantityAsync(ItemForUser item)
+            => _apiConsumer.UpdateItemQuantityAsync(item.ItemId, --item.Quantity);
+
     }
 }
