@@ -20,20 +20,39 @@ namespace Inventory.ServerLogic
         private readonly AppDbContext _dbContext = dbContext;
 
         public IAsyncEnumerable<LocationForUser> GetLocationsForUserAsync(int userId, CancellationToken cancellationToken = default)
-            => _dbContext.Locations
-                         .Where(l => l.LocationPermissions.Any(u => u.UserId == userId))
-                         .Select(l => new
-                         {
-                             Location = l,
-                             State = l.LocationStates.SingleOrDefault(s => s.UserId == userId),
-                         })
-                         .Select(l => new LocationForUser()
-                         {
-                             LocationId = l.Location.Id,
-                             Name = l.Location.Name,
-                             IsExpanded = l.State != null && l.State.IsExpanded
-                         })
-                         .AsAsyncEnumerable(cancellationToken);
+        {
+
+            var sql = _dbContext.Locations
+                                 .Where(l => l.LocationPermissions.Any(u => u.UserId == userId))
+                                 .Select(l => new
+                                 {
+                                     Location = l,
+                                     State = l.LocationStates.SingleOrDefault(s => s.UserId == userId),
+                                 })
+                                 .Select(l => new LocationForUser()
+                                 {
+                                     LocationId = l.Location.Id,
+                                     Name = l.Location.Name,
+                                     IsExpanded = l.State != null && l.State.IsExpanded
+                                 })
+                                 .ToQueryString();
+
+
+            return _dbContext.Locations
+                                 .Where(l => l.LocationPermissions.Any(u => u.UserId == userId))
+                                 .Select(l => new
+                                 {
+                                     Location = l,
+                                     State = l.LocationStates.SingleOrDefault(s => s.UserId == userId),
+                                 })
+                                 .Select(l => new LocationForUser()
+                                 {
+                                     LocationId = l.Location.Id,
+                                     Name = l.Location.Name,
+                                     IsExpanded = l.State != null && l.State.IsExpanded
+                                 })
+                                 .AsAsyncEnumerable(cancellationToken);
+        }
 
         public IAsyncEnumerable<ItemForUser> GetItemForUsersAsync(int userId, int locationId, CancellationToken cancellationToken = default)
             => _dbContext.Items
@@ -147,7 +166,7 @@ namespace Inventory.ServerLogic
         {
             await ThrowIfCantAccessLocationAsync(locationId, userId, cancellationToken);
 
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            //await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
             var updateCount = await _dbContext.LocationStates
                                                 .Where(s => s.LocationId == locationId && s.UserId == userId)
@@ -159,7 +178,7 @@ namespace Inventory.ServerLogic
                 {
                     LocationId = locationId,
                     IsExpanded = isExpanded,
-                    Id = locationId
+                    UserId = userId
                 }, cancellationToken);
 
                 await _dbContext.SaveChangesAsync(cancellationToken);

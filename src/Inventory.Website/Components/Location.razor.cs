@@ -12,13 +12,19 @@ namespace Inventory.Website.Components
 
         string? newItem = null;
         ICollection<ItemForUser>? items = null;
+        string? expandedClass;
 
         [Parameter]
         public LocationForUser? Content { get; set; }
 
         async Task ExpandedAsync()
         {
-            if (Content is null || items is not null) return;
+            if (Content is null) return;
+
+            Content.IsExpanded = !Content.IsExpanded;
+            await _apiConsumer.SetLocationAsExpanded(Content.LocationId, Content.IsExpanded);
+
+            if (items is not null) return;
 
             items = [];
             var res = _apiConsumer.GetItemForUsersAsync(Content.LocationId);
