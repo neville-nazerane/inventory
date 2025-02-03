@@ -8,10 +8,13 @@
             <a class="navbar-brand" href="/">Inventory</a>
 
             <!-- Right-aligned content -->
-            <div class="d-flex align-items-center">
-                <span class="me-3">Logged in as @user?.Identity?.Name</span>
-                <button class="btn btn-sm btn-danger" @onclick=SignOutAsync>Logout</button>
-            </div>
+            @if (user?.Identity?.IsAuthenticated == true)
+            {
+                <div class="d-flex align-items-center">
+                    <span class="me-3">Logged in as @user?.Identity?.Name</span>
+                    <button class="btn btn-sm btn-danger" @onclick=SignOutAsync>Logout</button>
+                </div>
+            }
         </div>
     </nav>
 
