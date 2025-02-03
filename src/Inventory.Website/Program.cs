@@ -14,15 +14,16 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // adding auth
 builder.Services.AddScoped(sp => new AuthClient(new(new AuthApiHandler())
 {
-    BaseAddress = new("http://localhost:5043")
+    BaseAddress = new("https://auth.nevillenazerane.com")
+    //BaseAddress = new("http://localhost:5043")
 }));
-//BaseAddress = new("https://auth.nevillenazerane.com")
 
 // adding api consumer
 builder.Services.AddTransient<ApiHandler>()
                 .AddScoped(sp => new ApiConsumer(new(sp.GetRequiredService<ApiHandler>())
                 {
-                    BaseAddress = new("http://localhost:5059")
+                    //BaseAddress = new("https://inventoryapi.nevillenazerane.com")
+                    //BaseAddress = new("http://localhost:5059")
                 }));
 
 builder.Services.AddSingleton<AuthenticationManager>()
