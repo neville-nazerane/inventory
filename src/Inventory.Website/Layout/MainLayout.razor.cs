@@ -12,7 +12,7 @@ namespace Inventory.Website.Layout
         private readonly AuthenticationManager _authManager = authManager;
         private readonly NavigationManager _navigationManager = navigationManager;
         
-        private ClaimsPrincipal user;
+        private ClaimsPrincipal? user;
 
         protected override async Task OnInitializedAsync()
 
