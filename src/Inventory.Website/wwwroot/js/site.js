@@ -1,7 +1,6 @@
 ﻿
 
 
-
 var modals = [];
 
 function getModal(id)
@@ -28,6 +27,20 @@ function showError(errorMsg)
     openModal("errorModal");
 }
 
+function expandCollapseable(id) {
+    var col = getCollapseable(id);
+    col.show();
+}
+
+function collapseCollapseable(id) {
+    var col = getCollapseable(id);
+    col.hide();
+}
+
+function getCollapseable(id) {
+    var element = document.getElementById(id);
+    return bootstrap.Collapse.getOrCreateInstance(element);
+}
 
 function saveToLocalStorage(key, value) {
     localStorage.setItem(key, value);
@@ -48,3 +61,5 @@ window.showError = showError;
 window.saveToLocalStorage = saveToLocalStorage;
 window.getFromLocalStorage = getFromLocalStorage;
 window.deleteFromLocalStorage = deleteFromLocalStorage;
+window.collapseCollapseable = collapseCollapseable;
+window.expandCollapseable = expandCollapseable;

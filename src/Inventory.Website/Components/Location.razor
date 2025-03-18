@@ -3,13 +3,20 @@
         <div class="card-header bg-light d-flex align-items-center">
             <span>@Content?.Name</span>
             <div class="ms-auto">
-                <button @onclick=ExpandedAsync class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseWrapper@(Content?.LocationId)">
-                    <i class="fa-solid fa-chevron-down"></i>
+                <button @onclick=SwapExpandAsync class="btn btn-primary">
+                    @if (showExpandLoading)
+                    {
+                        <Loading />
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-chevron-down"></i>
+                    }
                 </button>
             </div>
         </div>
         <div class="overflow-auto">
-            <div id="collapseWrapper@(Content?.LocationId)" class="collapse @expandedClass">
+            <div id="collapseWrapper@(Content?.LocationId)" class="collapse">
                 <div class="card-body position-relative">
                     @if (items is not null)
                     {
