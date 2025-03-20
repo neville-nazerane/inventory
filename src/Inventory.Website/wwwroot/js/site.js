@@ -38,7 +38,9 @@ function collapseCollapseable(id) {
 }
 
 function getCollapseable(id) {
+    console.log(id);
     var element = document.getElementById(id);
+    console.log(element);
     return bootstrap.Collapse.getOrCreateInstance(element);
 }
 

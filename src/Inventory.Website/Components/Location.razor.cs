@@ -45,7 +45,7 @@ namespace Inventory.Website.Components
 
         async Task SetExpandedAsync()
         {
-            if (showExpandLoading || Content is null) return;
+            if (Content is null) return;
 
             showExpandLoading = true;
 
