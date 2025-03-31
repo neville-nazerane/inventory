@@ -11,5 +11,6 @@ namespace Inventory.ClientLogic
     {
         ValueTask<string> GetJwtAsync(bool forceRefresh = false);
         Task LoginAsync(LoginModel model);
+        Task RefreshTokenAsync();
     }
 }

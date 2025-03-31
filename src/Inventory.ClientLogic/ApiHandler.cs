@@ -25,6 +25,21 @@ namespace Inventory.ClientLogic
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
 
             var res = await base.SendAsync(request, cancellationToken);
+            if (res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                try
+                {
+                    await _provider.RefreshTokenAsync();
+                    jwt = await _provider.GetJwtAsync();
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+                    res = await base.SendAsync(request, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to refresh");
+                    Console.WriteLine(ex);
+                }
+            }
             if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 var headerErrors = res.Headers.GetValues(TYPE_HEADER);
@@ -53,7 +68,7 @@ namespace Inventory.ClientLogic
 
                         if (ex is not null) throw ex;
                     }
-                    
+
                 }
 
                 throw new UnknownBadRequestException();
