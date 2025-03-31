@@ -9,7 +9,6 @@ namespace Inventory.ClientLogic
 {
     public interface IAuthProvider
     {
-
         ValueTask<string> GetJwtAsync(bool forceRefresh = false);
         Task LoginAsync(LoginModel model);
     }

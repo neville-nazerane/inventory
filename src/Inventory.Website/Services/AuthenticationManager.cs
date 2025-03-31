@@ -28,12 +28,15 @@ namespace Inventory.Website.Services
             var tokenResult = await _authClient.LoginAsync(model);
             if (tokenResult is null)
                 throw new BadRequestException("Failed to login");
+            await SaveResultAsync(tokenResult);
+        }
 
-            await SetStateAsync(JWT_KEY, tokenResult.AccessToken);
-            await SetStateAsync(REFRESH_TOKEN_KEY, tokenResult.RefreshToken);
+        public async Task RefreshTokenAsync()
+        {
+            var token = await GetRefreshTokenAsync() ?? throw new Exception("No token to refresh");
+            var res = await _authClient.RefreshTokenAsync(token) ?? throw new Exception("Failed to fetch new token");
 
-            var exp = DateTime.UtcNow.AddSeconds(tokenResult.ExpiresIn);
-            await SetTokenExpiryAsync(exp);
+            await SaveResultAsync(res);
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -50,7 +53,6 @@ namespace Inventory.Website.Services
 
             return new(new(identity));
         }
-
 
         public async Task SignInAsync(string jwtToken)
         {
@@ -94,6 +96,15 @@ namespace Inventory.Website.Services
 
             var res = await _js.GetFromLocalStorageAsync(key);
             return _states[res] = res;
+        }
+
+        async ValueTask SaveResultAsync(TokenResponse tokenResult)
+        {
+            await SetStateAsync(JWT_KEY, tokenResult.AccessToken);
+            await SetStateAsync(REFRESH_TOKEN_KEY, tokenResult.RefreshToken);
+
+            var exp = DateTime.UtcNow.AddSeconds(tokenResult.ExpiresIn);
+            await SetTokenExpiryAsync(exp);
         }
 
     }
