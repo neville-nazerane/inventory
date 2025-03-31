@@ -12,7 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // adding auth
-builder.Services.AddScoped(sp => new AuthClient(new(new AuthApiHandler())
+builder.Services.AddSingleton(sp => new AuthClient(new(new AuthApiHandler())
 {
     //BaseAddress = new("https://auth.nevillenazerane.com")
     BaseAddress = new("http://localhost:5043")

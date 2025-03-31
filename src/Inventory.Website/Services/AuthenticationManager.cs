@@ -68,6 +68,7 @@ namespace Inventory.Website.Services
 
         public ValueTask<string> GetJwtAsync(bool forceRefresh = false)
             => GetStateAsync(JWT_KEY, forceRefresh);
+
         public ValueTask<string> GetRefreshTokenAsync(bool forceRefresh = false)
             => GetStateAsync(REFRESH_TOKEN_KEY, forceRefresh);
 
@@ -85,17 +86,22 @@ namespace Inventory.Website.Services
 
         ValueTask SetStateAsync(string key, string value)
         {
+            Console.WriteLine("setting " + key);
             _states[key] = value;
             return _js.SaveToLocalStorageAsync(key, value);
         }
 
         async ValueTask<string> GetStateAsync(string key, bool forceRefresh = false)
         {
+            Console.WriteLine("Fetching from dict " + key);
             if (_states.TryGetValue(key, out string? value) && !forceRefresh)
                 return value;
 
+            Console.WriteLine("Fetching from storage " + key);
             var res = await _js.GetFromLocalStorageAsync(key);
-            return _states[res] = res;
+            if (!string.IsNullOrEmpty(res))
+                _states[res] = res;
+            return res;
         }
 
         async ValueTask SaveResultAsync(TokenResponse tokenResult)
