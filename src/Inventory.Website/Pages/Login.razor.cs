@@ -1,6 +1,7 @@
 ﻿using Auth.ApiConsumer;
 using Auth.Models;
 using Auth.WebAPI.Exceptions;
+using Inventory.ClientLogic;
 using Inventory.Website.Services;
 using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components;
@@ -9,24 +10,20 @@ using System.Linq;
 
 namespace Inventory.Website.Pages
 {
-    public partial class Login(AuthClient authClient,
+    public partial class Login(IAuthProvider authProvider,
                                IJSRuntime jS,
-                               NavigationManager navigation,
-                               AuthenticationManager authManager)
+                               NavigationManager navigation)
     {
-
-        private readonly AuthClient _authClient = authClient;
+        private readonly IAuthProvider _authProvider = authProvider;
         private readonly IJSRuntime _jS = jS;
         private readonly NavigationManager _navigation = navigation;
-        private readonly AuthenticationManager _authManager = authManager;
         private LoginModel model = new();
 
         async Task SubmitAsync()
         {
             try
             {
-                var jwt = await _authClient.LoginAsync(model);
-                await _authManager.SignInAsync(jwt);
+                await _authProvider.LoginAsync(model);
                 _navigation.NavigateTo("/");
             }
             catch (BadRequestException ex)
