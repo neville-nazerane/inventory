@@ -12,11 +12,18 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // adding auth
-builder.Services.AddSingleton(sp => new AuthClient(new(new AuthApiHandler())
-{
-    //BaseAddress = new("https://auth.nevillenazerane.com")
-    BaseAddress = new("http://localhost:5043")
-}));
+
+var services = builder.Services;
+
+services.AddSingleton<IAuthStore, AuthStore>()
+        .AddSingleton<AuthService>()
+        .AddTransient<AuthApiHandler>()
+        .AddScoped(sp => new AuthClient(new()
+        {
+            //BaseAddress = new("https://auth.nevillenazerane.com")
+            BaseAddress = new("http://localhost:5043")
+        }));                                                 ;
+
 
 // adding api consumer
 builder.Services.AddTransient<ApiHandler>()

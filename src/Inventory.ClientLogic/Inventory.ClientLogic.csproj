@@ -6,9 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-	<ItemGroup>
+	<!--<ItemGroup>
 		<PackageReference Include="Neville.Auth.ApiConsumer" Version="1.0.3287" />
-	</ItemGroup>
+	</ItemGroup>-->
 
   <ItemGroup>
     <ProjectReference Include="..\Inventory.Models\Inventory.Models.csproj" />
