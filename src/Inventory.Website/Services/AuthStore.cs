@@ -13,6 +13,9 @@ namespace Inventory.Website.Services
 
         private readonly IJSRuntime _js = js;
 
+        public async Task RemoveAsync(CancellationToken cancellationToken = default)
+            => await _js.DeleteFromLocalStorageAsync(STORAGE_KEY);
+
         public async Task<TokenData?> GetAsync(CancellationToken cancellationToken = default)
         {
             var str = await _js.GetFromLocalStorageAsync(STORAGE_KEY);

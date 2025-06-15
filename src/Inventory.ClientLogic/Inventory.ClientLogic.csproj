@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<!--<ItemGroup>
 		<PackageReference Include="Neville.Auth.ApiConsumer" Version="1.0.3287" />
 	</ItemGroup>-->
 
-  <ItemGroup>
-    <ProjectReference Include="..\Inventory.Models\Inventory.Models.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Inventory.Models\Inventory.Models.csproj" />
+		<ProjectReference Include="..\..\..\auth\src\Auth.ApiConsumer\Auth.ApiConsumer.csproj" />
+	</ItemGroup>
 
 </Project>
