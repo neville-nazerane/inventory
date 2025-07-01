@@ -1,4 +1,5 @@
-﻿using Inventory.ClientLogic.Exceptions;
+﻿using Auth.ApiConsumer;
+using Inventory.ClientLogic.Exceptions;
 using Inventory.Models.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -10,36 +11,16 @@ using System.Threading.Tasks;
 
 namespace Inventory.ClientLogic
 {
-    public class ApiHandler(IAuthProvider provider) : HttpClientHandler
+    public class ApiHandler(AuthService service) : AuthApiHandler(service)
     {
 
         private const string TYPE_HEADER = "exception-type";
 
 
-        private readonly IAuthProvider _provider = provider;
-
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var jwt = await _provider.GetJwtAsync();
-            if (jwt is not null)
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-
             var res = await base.SendAsync(request, cancellationToken);
-            if (res.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                try
-                {
-                    await _provider.RefreshTokenAsync();
-                    jwt = await _provider.GetJwtAsync();
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-                    res = await base.SendAsync(request, cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to refresh");
-                    Console.WriteLine(ex);
-                }
-            }
+
             if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 var headerErrors = res.Headers.GetValues(TYPE_HEADER);
