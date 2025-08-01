@@ -1,4 +1,6 @@
-﻿namespace Inventory.WebAPI.Utils
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Inventory.ServerLogic.Utils
 {
     public static class ConfigExtensions
     {

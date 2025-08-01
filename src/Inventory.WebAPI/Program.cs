@@ -42,11 +42,7 @@ builder.Services.AddAuthentication(o =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddAuthServices(new()
-{
-    Endpoint = configs.GetRequiredConfig("auth::Endpoint"),
-    HeaderKey = configs.GetRequiredConfig("auth::Key")
-});
+
 
 builder.Services.AddCors(options =>
 {
