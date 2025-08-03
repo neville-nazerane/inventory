@@ -18,7 +18,7 @@ namespace Inventory.Website.Services
 
         public async Task LoginAsync(LoginModel model)
         {
-            if (await _authService.LoginAsync(model))
+            if (await _authService.SigninAsync(model))
                 NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
