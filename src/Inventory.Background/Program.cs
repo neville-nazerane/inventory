@@ -7,7 +7,7 @@ var configs = builder.Configuration;
 
 builder.Services.AddHostedService<CleanupWorker>()
                 .AddTransient<CleanupService>()
-
+                .AddAllServices(configs)
                 .AddAuthServices(new()
                 {
                     Endpoint = configs.GetRequiredConfig("auth::Endpoint"),
