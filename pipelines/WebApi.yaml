@@ -85,9 +85,9 @@ stages:
                     SyslogIdentifier=$(service.name)
                     User=root
                     Environment=sqlConnection='$(sqlConnection)'
-                    Environment=authOptions__secret='$(auth.secret)'
-                    Environment=authOptions__issuer='$(auth.issuer)'
                     Environment=cors='$(cors)'
+                    Environment=auth__secret='$(auth.secret)'
+                    Environment=auth__issuer='$(auth.issuer)'
                     EOF
 
                   displayName: Generate Service File

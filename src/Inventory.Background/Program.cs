@@ -10,8 +10,8 @@ builder.Services.AddHostedService<CleanupWorker>()
                 .AddAllServices(configs)
                 .AddAuthServices(new()
                 {
-                    Endpoint = configs.GetRequiredConfig("auth::Endpoint"),
-                    HeaderKey = configs.GetRequiredConfig("auth::Key")
+                    Endpoint = configs.GetRequiredConfig("auth::endpoint"),
+                    HeaderKey = configs.GetRequiredConfig("auth::key")
                 });
 
 var host = builder.Build();

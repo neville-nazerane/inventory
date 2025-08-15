@@ -22,7 +22,7 @@ builder.Services.AddAuthentication(o =>
                 })
                 .AddJwtBearer(o =>
                 {
-                    var options = configs.GetSection("authOptions");
+                    var options = configs.GetSection("auth");
 
                     var secret = options["secret"];
                     ArgumentNullException.ThrowIfNull(secret);
