@@ -8,11 +8,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Auth.ServerSDK" Version="1.0.3356" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\auth\src\Auth.ServerSDK\Auth.ServerSDK.csproj" />
 		<ProjectReference Include="..\Inventory.ServerLogic\Inventory.ServerLogic.csproj" />
 	</ItemGroup>
 </Project>
