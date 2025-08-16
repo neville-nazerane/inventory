@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Auth.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,7 @@ namespace Inventory.ClientLogic
 {
     public interface IAuthProvider
     {
-
-        ValueTask<string> GetJwtAsync();
-
+        Task LoginAsync(LoginModel model);
+        Task SignupAsync(SignupModel model);
     }
 }

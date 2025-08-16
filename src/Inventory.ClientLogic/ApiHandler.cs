@@ -1,8 +1,10 @@
-﻿using Inventory.ClientLogic.Exceptions;
+﻿using Auth.ApiConsumer;
+using Inventory.ClientLogic.Exceptions;
 using Inventory.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -10,53 +12,57 @@ using System.Threading.Tasks;
 
 namespace Inventory.ClientLogic
 {
-    public class ApiHandler(IAuthProvider provider) : HttpClientHandler
+    public class ApiHandler(AuthService service) : AuthApiHandler(service)
     {
 
         private const string TYPE_HEADER = "exception-type";
-
-
-        private readonly IAuthProvider _provider = provider;
+        private readonly AuthService _authService = service;
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var jwt = await _provider.GetJwtAsync();
-            if (jwt is not null)
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
-
             var res = await base.SendAsync(request, cancellationToken);
-            if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
+
+            switch (res.StatusCode)
             {
-                var headerErrors = res.Headers.GetValues(TYPE_HEADER);
-
-                if (headerErrors.Count() == 1)
-                {
-                    var errorHeader = headerErrors.SingleOrDefault();
-
-                    Exception? ex = null;
-
-                    if (request.Content is not null)
+                case HttpStatusCode.BadRequest:
                     {
-                        var content = request.Content;
+                        var headerErrors = res.Headers.GetValues(TYPE_HEADER);
 
-                        switch (errorHeader)
+                        if (headerErrors.Count() == 1)
                         {
-                            case nameof(SingleErrorException):
-                                var errorStr = await content.ReadAsStringAsync(cancellationToken);
-                                ex = new SingleErrorException(errorStr);
-                                break;
-                            case nameof(MultiErrorsException):
-                                var messages = await content.ReadFromJsonAsync<IEnumerable<string>>(cancellationToken);
-                                ex = new MultiErrorsException(messages ?? []);
-                                break;
+                            var errorHeader = headerErrors.SingleOrDefault();
+
+                            Exception? ex = null;
+
+                            if (request.Content is not null)
+                            {
+                                var content = request.Content;
+
+                                switch (errorHeader)
+                                {
+                                    case nameof(SingleErrorException):
+                                        var errorStr = await content.ReadAsStringAsync(cancellationToken);
+                                        ex = new SingleErrorException(errorStr);
+                                        break;
+                                    case nameof(MultiErrorsException):
+                                        var messages = await content.ReadFromJsonAsync<IEnumerable<string>>(cancellationToken);
+                                        ex = new MultiErrorsException(messages ?? []);
+                                        break;
+                                }
+
+                                if (ex is not null) throw ex;
+                            }
+
                         }
 
-                        if (ex is not null) throw ex;
+                        throw new UnknownBadRequestException();
                     }
-                    
-                }
 
-                throw new UnknownBadRequestException();
+                case HttpStatusCode.Unauthorized:
+                    {
+                        await _authService.SignOutAsync(cancellationToken);
+                        break;
+                    }
             }
             return res;
         }

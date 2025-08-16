@@ -1,26 +1,44 @@
-﻿using Inventory.ClientLogic;
+﻿using Auth.ApiConsumer;
+using Auth.Models;
+using Auth.WebAPI.Exceptions;
+using Inventory.ClientLogic;
 using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Inventory.Website.Services
 {
-    public class AuthenticationManager(IJSRuntime js) : AuthenticationStateProvider, IAuthProvider
+    public class AuthenticationManager(AuthService authService) : AuthenticationStateProvider, IAuthProvider
     {
 
-        private const string JWT_KEY = "JWT_TOKEN";
+        private readonly AuthService _authService = authService;
 
-        private readonly IJSRuntime _js = js;
+        public async Task LoginAsync(LoginModel model)
+        {
+            if (await _authService.SigninAsync(model))
+                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
+        public async Task SignupAsync(SignupModel model)
+        {
+            if (await _authService.SignupAsync(model)) 
+                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
+        public async Task SignOutAsync()
+        {
+            await _authService.SignOutAsync();
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var jwt = await GetJwtAsync();
+            var jwt = await _authService.GetJwtAsync();
             if (string.IsNullOrEmpty(jwt))
-            {
                 return new(new(new ClaimsIdentity()));
-            }
 
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwt);
@@ -29,18 +47,5 @@ namespace Inventory.Website.Services
             return new(new(identity));
         }
 
-        public ValueTask<string> GetJwtAsync() => _js.GetFromLocalStorageAsync(JWT_KEY);
-
-        public async Task SignInAsync(string jwtToken)
-        {
-            await _js.SaveToLocalStorageAsync(JWT_KEY, jwtToken);
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-        }
-
-        public async Task SignOutAsync()
-        {
-            await _js.DeleteFromLocalStorageAsync(JWT_KEY);
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-        }
     }
 }

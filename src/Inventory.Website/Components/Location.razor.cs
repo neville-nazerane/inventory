@@ -1,37 +1,76 @@
 ﻿using Inventory.ClientLogic;
 using Inventory.Models;
+using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Reflection.Emit;
 
 namespace Inventory.Website.Components
 {
-    public partial class Location(ApiConsumer apiConsumer)
+    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js)
     {
 
         private readonly ApiConsumer _apiConsumer = apiConsumer;
+        private readonly IJSRuntime _js = js;
 
+        bool showExpandLoading = false;
         string? newItem = null;
         ICollection<ItemForUser>? items = null;
-        string? expandedClass;
 
         [Parameter]
         public LocationForUser? Content { get; set; }
 
-        async Task ExpandedAsync()
+        protected override async Task OnParametersSetAsync()
+        {
+            if (Content?.IsExpanded == true)
+                await SetExpandedAsync();
+        }
+
+        async Task SwapExpandAsync()
+        {
+            if (showExpandLoading || Content is null) return;
+
+            try
+            {
+                showExpandLoading = true;
+                Content.IsExpanded = !Content.IsExpanded;
+                await _apiConsumer.SetLocationAsExpanded(Content.LocationId, Content.IsExpanded);
+                await SetExpandedAsync();
+            }
+            finally
+            {
+                showExpandLoading = false;
+            }
+        }
+
+        async Task SetExpandedAsync()
         {
             if (Content is null) return;
 
-            Content.IsExpanded = !Content.IsExpanded;
-            await _apiConsumer.SetLocationAsExpanded(Content.LocationId, Content.IsExpanded);
-
-            if (items is not null) return;
+            showExpandLoading = true;
 
             items = [];
-            var res = _apiConsumer.GetItemForUsersAsync(Content.LocationId);
+            try
+            {
+                if (Content.IsExpanded)
+                {
+                    var res = _apiConsumer.GetItemForUsersAsync(Content.LocationId);
 
-            await foreach (var item in res)
-                if (item is not null)
-                    items.Add(item);
+                    await foreach (var item in res)
+                        if (item is not null)
+                            items.Add(item);
+
+                    await _js.ExpandCollapseableAsync($"collapseWrapper{Content?.LocationId}");
+                }
+                else
+                {
+                    await _js.CollapseCollapseableAsync($"collapseWrapper{Content?.LocationId}");
+                }
+            }
+            finally
+            {
+                showExpandLoading = false;
+            }
         }
 
         async Task AddItemAsync()
@@ -52,7 +91,7 @@ namespace Inventory.Website.Components
             newItem = null;
         }
 
-        public Task IncreaseQuantityAsync(ItemForUser item) 
+        public Task IncreaseQuantityAsync(ItemForUser item)
             => _apiConsumer.UpdateItemQuantityAsync(item.ItemId, ++item.Quantity);
 
         public Task DecreaseQuantityAsync(ItemForUser item)

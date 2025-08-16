@@ -12,17 +12,16 @@ trigger:
     include:
       - src/Inventory.Models
       - src/Inventory.ServerLogic
-      - src/Inventory.WebAPI
-      - pipelines/WebApi.yaml
+      - src/Inventory.Background
+      - pipelines/Background.yaml
 
 variables:
-  projectPath: src/Inventory.WebAPI
-  projectName: Inventory.WebAPI
-  deploymentDestDirectory: /var/www/inventoryAPI
+  projectPath: src/Inventory.Background
+  projectName: Inventory.Background
+  deploymentDestDirectory: /var/www/inventoryBackground
 
-  service.name: kestrel-inventoryApi
-  service.url: http://localhost:5085
-  service.description: Inventory API
+  service.name: kestrel-inventoryBackground
+  service.description: Inventory Background
 
 stages:
   - stage: 
@@ -36,7 +35,7 @@ stages:
           dotnet publish $(projectPath) -c release -o published
           mkdir -p compressed
           tar -czf compressed/$(projectName).tar.gz -C published .
-        displayName: Publishing API
+        displayName: Publishing Worker
 
       - publish: compressed
         displayName: Publish for release
@@ -77,7 +76,7 @@ stages:
 
                     [Service]
                     WorkingDirectory=$(deploymentDestDirectory)
-                    ExecStart=/usr/bin/dotnet $(deploymentDestDirectory)/$(projectName).dll --urls $(service.url)
+                    ExecStart=/usr/bin/dotnet $(deploymentDestDirectory)/$(projectName).dll
                     Restart=always
                     # Restart service after 10 seconds if the dotnet service crashes:
                     RestartSec=10

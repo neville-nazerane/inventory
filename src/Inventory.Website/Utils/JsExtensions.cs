@@ -27,5 +27,11 @@ namespace Inventory.Website.Utils
         public static ValueTask ShowErrorAsync(this IJSRuntime js, BadRequestException ex)
             => js.ShowErrorAsync(string.Join(',', ex.Messages));
 
+        public static ValueTask ExpandCollapseableAsync(this IJSRuntime js, string id)
+            => js.InvokeVoidAsync("window.expandCollapseable", id);
+
+        public static ValueTask CollapseCollapseableAsync(this IJSRuntime js, string id)
+            => js.InvokeVoidAsync("window.collapseCollapseable", id);
+
     }
 }
