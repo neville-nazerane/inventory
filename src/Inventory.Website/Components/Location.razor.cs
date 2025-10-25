@@ -1,5 +1,6 @@
 ﻿using Inventory.ClientLogic;
 using Inventory.Models;
+using Inventory.Website.Services;
 using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -7,12 +8,12 @@ using System.Reflection.Emit;
 
 namespace Inventory.Website.Components
 {
-    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js)
+    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js, AppState appState)
     {
 
         private readonly ApiConsumer _apiConsumer = apiConsumer;
         private readonly IJSRuntime _js = js;
-
+        private readonly AppState _appState = appState;
         bool showExpandLoading = false;
         string? newItem = null;
         ICollection<ItemForUser>? items = null;
@@ -97,5 +98,10 @@ namespace Inventory.Website.Components
         public Task DecreaseQuantityAsync(ItemForUser item)
             => _apiConsumer.UpdateItemQuantityAsync(item.ItemId, --item.Quantity);
 
+        public async Task EditItemAsync(ItemForUser item)
+        {
+            await _appState.EditItemAsync(item);
+            StateHasChanged();
+        }
     }
 }

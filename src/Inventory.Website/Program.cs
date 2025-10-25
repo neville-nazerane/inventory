@@ -18,6 +18,7 @@ var services = builder.Services;
 services.AddSingleton<IAuthStore, AuthStore>()
         .AddTransient<AuthApiHandler>()
         .AddSingleton<AuthService>()
+        .AddSingleton<AppState>()
         .AddSingleton(sp => new AuthClient(new()
         {
             BaseAddress = new(Configs.AuthApiEndpoint)
