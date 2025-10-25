@@ -20,8 +20,7 @@ services.AddSingleton<IAuthStore, AuthStore>()
         .AddSingleton<AuthService>()
         .AddSingleton(sp => new AuthClient(new()
         {
-            BaseAddress = new("https://auth.nevillenazerane.com")
-            //BaseAddress = new("http://localhost:5043")
+            BaseAddress = new(Configs.AuthApiEndpoint)
         }));                                                 
 
 
@@ -29,8 +28,7 @@ services.AddSingleton<IAuthStore, AuthStore>()
 builder.Services.AddTransient<ApiHandler>()
                 .AddSingleton(sp => new ApiConsumer(new(sp.GetRequiredService<ApiHandler>())
                 {
-                    BaseAddress = new("https://inventoryapi.nevillenazerane.com")
-                    //BaseAddress = new("http://localhost:5059")
+                    BaseAddress = new(Configs.ApiEndpoint)
                 }));
 
 builder.Services.AddSingleton<AuthenticationManager>()
