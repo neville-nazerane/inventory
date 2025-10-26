@@ -88,7 +88,7 @@ namespace Inventory.ClientLogic
         public async Task<int> DeleteItemAsync(int itemId,
                                                CancellationToken cancellationToken = default)
         {
-            using var response = await _httpClient.DeleteAsync($"item/editor/{itemId}", cancellationToken);
+            using var response = await _httpClient.DeleteAsync($"item/{itemId}", cancellationToken);
             response.EnsureSuccessStatusCode();
             return await response.ParseIntAsync(cancellationToken);
         }
