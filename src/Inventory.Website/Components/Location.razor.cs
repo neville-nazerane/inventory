@@ -8,7 +8,7 @@ using System.Reflection.Emit;
 
 namespace Inventory.Website.Components
 {
-    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js, AppState appState)
+    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js, AppState appState) : IDisposable
     {
 
         private readonly ApiConsumer _apiConsumer = apiConsumer;
@@ -20,6 +20,26 @@ namespace Inventory.Website.Components
 
         [Parameter]
         public LocationForUser? Content { get; set; }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            _appState.ItemDeleted += ItemDeleted;
+        }
+
+        private void ItemDeleted(int itemId)
+        {
+            if (items is not null)
+            {
+                var item = items.SingleOrDefault(i => i.ItemId == itemId);
+                if (item is not null)
+                {
+                    items?.Remove(item);
+                    StateHasChanged();
+                }
+            }
+        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -102,6 +122,11 @@ namespace Inventory.Website.Components
         {
             await _appState.EditItemAsync(item);
             StateHasChanged();
+        }
+
+        public void Dispose()
+        {
+            _appState.ItemDeleted -= ItemDeleted;
         }
     }
 }

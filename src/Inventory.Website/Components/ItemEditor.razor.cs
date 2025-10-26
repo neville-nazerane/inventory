@@ -22,8 +22,14 @@ namespace Inventory.Website.Components
             StateHasChanged();
         }
 
-        Task DeleteAsync() 
-            => item is not null ? _apiConsumer.DeleteItemAsync(item.ItemId) : Task.CompletedTask;
+        async Task DeleteAsync()
+        {
+            if (item is not null)
+            {
+                await _apiConsumer.DeleteItemAsync(item.ItemId);
+                _appState.TriggerItemDeleted(item.ItemId);
+            }
+        }
 
         public void Dispose()
         {
