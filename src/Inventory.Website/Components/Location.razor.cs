@@ -60,7 +60,7 @@ namespace Inventory.Website.Components
 
         private void LocationUpdated(LocationEditorModel obj)
         {
-            if (Content is not null)
+            if (Content?.LocationId == obj.Id)
             {
                 Content.Name = obj.Name;
                 StateHasChanged();
@@ -147,6 +147,13 @@ namespace Inventory.Website.Components
         public async Task EditItemAsync(ItemForUser item)
         {
             await _appState.EditItemAsync(item.ItemId);
+            StateHasChanged();
+        }
+
+        public async Task EditLocationAsync()
+        {
+            if (Content is null) return;
+            await _appState.EditLocationAsync(Content.LocationId);
             StateHasChanged();
         }
 

@@ -5,11 +5,12 @@ using System.Diagnostics.Contracts;
 
 namespace Inventory.Website.Pages
 {
-    public partial class Home(AuthenticationManager authManager, ApiConsumer apiConsumer)
+    public partial class Home(AuthenticationManager authManager, ApiConsumer apiConsumer, AppState appState) : IDisposable
     {
         
         private readonly AuthenticationManager _authManager = authManager;
         private readonly ApiConsumer _apiConsumer = apiConsumer;
+        private readonly AppState _appState = appState;
 
         bool addLoading;
 
@@ -18,10 +19,21 @@ namespace Inventory.Website.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            _appState.LocationDeleted += LocationDeleted;
             var res = _apiConsumer.GetLocationsForUserAsync();
             await foreach (var location in res)
                 if (location is not null)
                     locations.Add(location);
+        }
+
+        private void LocationDeleted(int obj)
+        {
+            var location = locations.SingleOrDefault(l => l.LocationId == obj);
+            if (location is not null)
+            {
+                locations.Remove(location);
+                StateHasChanged();
+            }
         }
 
         async Task AddLocationAsync()
@@ -44,6 +56,11 @@ namespace Inventory.Website.Pages
                     addLoading = false;
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _appState.LocationDeleted -= LocationDeleted;
         }
 
     }

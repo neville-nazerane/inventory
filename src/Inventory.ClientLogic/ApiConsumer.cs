@@ -50,7 +50,7 @@ namespace Inventory.ClientLogic
         public async Task<int> DeleteLocationAsync(int locationId,
                                                    CancellationToken cancellationToken = default)
         {
-            using var response = await _httpClient.DeleteAsync($"location/editor/{locationId}", cancellationToken);
+            using var response = await _httpClient.DeleteAsync($"location/{locationId}", cancellationToken);
             response.EnsureSuccessStatusCode();
             return await response.ParseIntAsync(cancellationToken);
         }

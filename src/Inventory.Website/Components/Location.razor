@@ -1,7 +1,7 @@
 ﻿<div class="col-md-4">
     <div class="card mb-3">
         <div class="card-header bg-light d-flex align-items-center">
-            <span>@Content?.Name</span>
+            <span class="hover-underline" @onclick=EditLocationAsync>@Content?.Name</span>
             <div class="ms-auto">
                 <button @onclick=SwapExpandAsync class="btn btn-primary">
                     @if (showExpandLoading)
