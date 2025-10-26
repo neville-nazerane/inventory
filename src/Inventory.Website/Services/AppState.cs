@@ -2,6 +2,7 @@
 using Inventory.Models.Entities;
 using Inventory.Website.Utils;
 using Microsoft.JSInterop;
+using System.Threading.Tasks;
 
 namespace Inventory.Website.Services
 {
@@ -11,13 +12,21 @@ namespace Inventory.Website.Services
 
         //public ItemForUser? EditingItem { get; private set; }
 
-        public event Action<ItemForUser>? EditingItemChanged;
+        public event Func<int, Task>? EditingItemChanged;
+
+        public event Action<ItemEditorModel>? ItemUpdated;
 
         public event Action<int>? ItemDeleted;
 
-        public async ValueTask EditItemAsync(ItemForUser item)
+
+        public event Action<LocationForUser>? EditingLocationChanged;
+
+        public event Action<int>? LocationDeleted;
+
+        public async Task EditItemAsync(int itemId)
         {
-            EditingItemChanged?.Invoke(item);
+            if (EditingItemChanged is not null)
+                await EditingItemChanged(itemId);
             await _js.OpenModalAsync("itemEdit");
         }
 
@@ -25,6 +34,23 @@ namespace Inventory.Website.Services
         {
             ItemDeleted?.Invoke(itemId);
         }
+
+        public void TriggerUpdated(ItemEditorModel item)
+        {
+            ItemUpdated?.Invoke(item);
+        }
+
+        public async ValueTask EditLocationAsync(LocationForUser location)
+        {
+            EditingLocationChanged?.Invoke(location);
+            await _js.OpenModalAsync("locationEdit");
+        }
+
+        public void TriggerLocationDeleted(int locationId)
+        {
+            LocationDeleted?.Invoke(locationId);
+        }
+
 
     }
 }

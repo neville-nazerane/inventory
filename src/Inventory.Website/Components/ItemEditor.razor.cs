@@ -9,25 +9,34 @@ namespace Inventory.Website.Components
         private readonly AppState _appState = appState;
         private readonly ApiConsumer _apiConsumer = apiConsumer;
 
-        private ItemForUser? item;
+        private ItemEditorModel? item;
 
         protected override void OnInitialized()
         {
             _appState.EditingItemChanged += EditingItemChanged;
         }
 
-        private void EditingItemChanged(ItemForUser i)
+        private async Task EditingItemChanged(int itemId)
         {
-            item = i;
+            item = await _apiConsumer.GetItemEditorAsync(itemId);
             StateHasChanged();
+        }
+
+        async Task SaveAsync()
+        {
+            if (item is not null)
+            {
+                await _apiConsumer.UpdateItemAsync(item);
+                _appState.TriggerUpdated(item);
+            }
         }
 
         async Task DeleteAsync()
         {
             if (item is not null)
             {
-                await _apiConsumer.DeleteItemAsync(item.ItemId);
-                _appState.TriggerItemDeleted(item.ItemId);
+                await _apiConsumer.DeleteItemAsync(item.Id);
+                _appState.TriggerItemDeleted(item.Id);
             }
         }
 

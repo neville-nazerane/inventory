@@ -26,6 +26,21 @@ namespace Inventory.Website.Components
             base.OnInitialized();
 
             _appState.ItemDeleted += ItemDeleted;
+            _appState.ItemUpdated += ItemUpdated;
+        }
+
+        private void ItemUpdated(ItemEditorModel obj)
+        {
+            if (items is not null)
+            {
+                var item = items.SingleOrDefault(i => i.ItemId == obj.Id);
+                if (item is not null)
+                {
+                    item.Name = obj.Name;
+
+                    StateHasChanged();
+                }
+            }
         }
 
         private void ItemDeleted(int itemId)
@@ -120,7 +135,7 @@ namespace Inventory.Website.Components
 
         public async Task EditItemAsync(ItemForUser item)
         {
-            await _appState.EditItemAsync(item);
+            await _appState.EditItemAsync(item.ItemId);
             StateHasChanged();
         }
 
