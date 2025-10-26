@@ -9,12 +9,13 @@ namespace Inventory.Website.Services
     {
         private readonly IJSRuntime _js = js;
 
-        public ItemForUser? EditingItem { get; private set; }
+        //public ItemForUser? EditingItem { get; private set; }
+
+        public event Action<ItemForUser>? EditingItemChanged;
 
         public async ValueTask EditItemAsync(ItemForUser item)
         {
-            EditingItem = item;
-            Console.WriteLine(item.Name);
+            EditingItemChanged?.Invoke(item);
             await _js.OpenModalAsync("itemEdit");
         }
 
