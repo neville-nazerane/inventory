@@ -10,16 +10,15 @@ namespace Inventory.Website.Services
     {
         private readonly IJSRuntime _js = js;
 
-        //public ItemForUser? EditingItem { get; private set; }
-
         public event Func<int, Task>? EditingItemChanged;
 
         public event Action<ItemEditorModel>? ItemUpdated;
 
         public event Action<int>? ItemDeleted;
 
+        public event Func<int, Task>? EditingLocationChanged;
 
-        public event Action<LocationForUser>? EditingLocationChanged;
+        public event Action<LocationEditorModel>? LocationUpdated;
 
         public event Action<int>? LocationDeleted;
 
@@ -40,15 +39,21 @@ namespace Inventory.Website.Services
             ItemUpdated?.Invoke(item);
         }
 
-        public async ValueTask EditLocationAsync(LocationForUser location)
+        public async Task EditLocationAsync(int locationId)
         {
-            EditingLocationChanged?.Invoke(location);
+            if (EditingLocationChanged is not null)
+                await EditingLocationChanged(locationId);
             await _js.OpenModalAsync("locationEdit");
         }
 
         public void TriggerLocationDeleted(int locationId)
         {
             LocationDeleted?.Invoke(locationId);
+        }
+
+        public void TriggerLocationUpdated(LocationEditorModel location)
+        {
+            LocationUpdated?.Invoke(location);
         }
 
 

@@ -1,0 +1,31 @@
+﻿<div id="locationEdit" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Location</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                @if (location is not null)
+                {
+                    <div>@location.Name</div>
+
+                    <EditForm Model="@location">
+
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <InputText class="form-control" @bind-Value="location.Name" />
+                        </div>
+
+                    </EditForm>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button @onclick=DeleteAsync type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                <button @onclick=SaveAsync type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

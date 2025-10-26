@@ -1,5 +1,6 @@
 ﻿using Inventory.ClientLogic;
 using Inventory.Models;
+using Inventory.Models.Entities;
 using Inventory.Website.Services;
 using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components;
@@ -27,6 +28,7 @@ namespace Inventory.Website.Components
 
             _appState.ItemDeleted += ItemDeleted;
             _appState.ItemUpdated += ItemUpdated;
+            _appState.LocationUpdated += LocationUpdated;
         }
 
         private void ItemUpdated(ItemEditorModel obj)
@@ -53,6 +55,15 @@ namespace Inventory.Website.Components
                     items?.Remove(item);
                     StateHasChanged();
                 }
+            }
+        }
+
+        private void LocationUpdated(LocationEditorModel obj)
+        {
+            if (Content is not null)
+            {
+                Content.Name = obj.Name;
+                StateHasChanged();
             }
         }
 
@@ -142,6 +153,9 @@ namespace Inventory.Website.Components
         public void Dispose()
         {
             _appState.ItemDeleted -= ItemDeleted;
+            _appState.ItemUpdated -= ItemUpdated;
+            _appState.LocationUpdated -= LocationUpdated;
+
         }
     }
 }
