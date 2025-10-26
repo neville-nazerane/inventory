@@ -1,7 +1,7 @@
 ﻿<div class="col-md-4">
     <div class="card mb-3">
         <div class="card-header bg-light d-flex align-items-center">
-            <span>@Content?.Name</span>
+            <span class="hover-underline" @onclick=EditLocationAsync>@Content?.Name</span>
             <div class="ms-auto">
                 <button @onclick=SwapExpandAsync class="btn btn-primary">
                     @if (showExpandLoading)
@@ -23,7 +23,7 @@
                         <ul class="list-group">
                             @foreach (var item in items)
                             {
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <li @onclick="@(async () => await EditItemAsync(item))" class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>@item.Name</span>
                                     <div class="d-flex align-items-center">
                                         <button @onclick="@(async () => await DecreaseQuantityAsync(item))" class="btn btn-sm btn-secondary me-2">-</button>

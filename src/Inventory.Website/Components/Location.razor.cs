@@ -1,5 +1,7 @@
 ﻿using Inventory.ClientLogic;
 using Inventory.Models;
+using Inventory.Models.Entities;
+using Inventory.Website.Services;
 using Inventory.Website.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -7,18 +9,63 @@ using System.Reflection.Emit;
 
 namespace Inventory.Website.Components
 {
-    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js)
+    public partial class Location(ApiConsumer apiConsumer, IJSRuntime js, AppState appState) : IDisposable
     {
 
         private readonly ApiConsumer _apiConsumer = apiConsumer;
         private readonly IJSRuntime _js = js;
-
+        private readonly AppState _appState = appState;
         bool showExpandLoading = false;
         string? newItem = null;
         ICollection<ItemForUser>? items = null;
 
         [Parameter]
         public LocationForUser? Content { get; set; }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            _appState.ItemDeleted += ItemDeleted;
+            _appState.ItemUpdated += ItemUpdated;
+            _appState.LocationUpdated += LocationUpdated;
+        }
+
+        private void ItemUpdated(ItemEditorModel obj)
+        {
+            if (items is not null)
+            {
+                var item = items.SingleOrDefault(i => i.ItemId == obj.Id);
+                if (item is not null)
+                {
+                    item.Name = obj.Name;
+
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private void ItemDeleted(int itemId)
+        {
+            if (items is not null)
+            {
+                var item = items.SingleOrDefault(i => i.ItemId == itemId);
+                if (item is not null)
+                {
+                    items?.Remove(item);
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private void LocationUpdated(LocationEditorModel obj)
+        {
+            if (Content?.LocationId == obj.Id)
+            {
+                Content.Name = obj.Name;
+                StateHasChanged();
+            }
+        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -97,5 +144,25 @@ namespace Inventory.Website.Components
         public Task DecreaseQuantityAsync(ItemForUser item)
             => _apiConsumer.UpdateItemQuantityAsync(item.ItemId, --item.Quantity);
 
+        public async Task EditItemAsync(ItemForUser item)
+        {
+            await _appState.EditItemAsync(item.ItemId);
+            StateHasChanged();
+        }
+
+        public async Task EditLocationAsync()
+        {
+            if (Content is null) return;
+            await _appState.EditLocationAsync(Content.LocationId);
+            StateHasChanged();
+        }
+
+        public void Dispose()
+        {
+            _appState.ItemDeleted -= ItemDeleted;
+            _appState.ItemUpdated -= ItemUpdated;
+            _appState.LocationUpdated -= LocationUpdated;
+
+        }
     }
 }

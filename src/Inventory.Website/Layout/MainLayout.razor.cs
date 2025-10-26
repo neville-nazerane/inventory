@@ -1,4 +1,5 @@
 ﻿using Inventory.ClientLogic;
+using Inventory.Models;
 using Inventory.Website.Services;
 using Microsoft.AspNetCore.Components;
 using System.Reflection.Metadata;
@@ -21,11 +22,13 @@ namespace Inventory.Website.Layout
             user = state.User;
         }
 
+
         public async Task SignOutAsync()
         {
             await _authManager.SignOutAsync();
             _navigationManager.NavigateTo("login");
         }
+
 
     }
 }
