@@ -12,11 +12,12 @@ using System.Threading.Tasks;
 
 namespace Inventory.ClientLogic
 {
-    public class ApiHandler(AuthService service) : AuthApiHandler(service)
+    public class ApiHandler(AuthService service, IAuthProvider authProvider) : AuthApiHandler(service)
     {
 
         private const string TYPE_HEADER = "exception-type";
         private readonly AuthService _authService = service;
+        private readonly IAuthProvider _authProvider = authProvider;
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -60,7 +61,7 @@ namespace Inventory.ClientLogic
 
                 case HttpStatusCode.Unauthorized:
                     {
-                        await _authService.SignOutAsync(cancellationToken);
+                        await _authProvider.SignOutAsync();
                         break;
                     }
             }

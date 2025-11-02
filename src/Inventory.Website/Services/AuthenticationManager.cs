@@ -40,11 +40,18 @@ namespace Inventory.Website.Services
             if (string.IsNullOrEmpty(jwt))
                 return new(new(new ClaimsIdentity()));
 
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwt);
-            var identity = new ClaimsIdentity(token.Claims, "Bearer");
-
-            return new(new(identity));
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(jwt);
+                var identity = new ClaimsIdentity(token.Claims, "Bearer");
+                return new(new(identity));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new(new(new ClaimsIdentity()));
+            }
         }
 
     }

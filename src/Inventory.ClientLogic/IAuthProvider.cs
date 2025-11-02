@@ -10,6 +10,7 @@ namespace Inventory.ClientLogic
     public interface IAuthProvider
     {
         Task LoginAsync(LoginModel model);
+        Task SignOutAsync();
         Task SignupAsync(SignupModel model);
     }
 }
